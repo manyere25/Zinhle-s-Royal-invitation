@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Princess Zinhle's Royal Birthday Invitation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Tangerine:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            overflow-x: hidden;
+            background: #1a0a2e;
+            min-height: 100vh;
+            font-family: 'Cormorant Garamond', serif;
+            color: #3d1a0a;
+        }
+
+        /* Magical background */
+        .bg-scene {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            background: radial-gradient(ellipse at center, #2d1b4e 0%, #1a0a2e 50%, #0d0518 100%);
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: var(--max-opacity); transform: scale(1); }
+        }
+
+        .magic-particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: radial-gradient(circle, #ffd700 0%, transparent 70%);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
+            10% { opacity: 1; transform: scale(1); }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) translateX(var(--drift)) scale(0); opacity: 0; }
+        }
+
+        /* Opening overlay */
+        .opening-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1000;
+            background: radial-gradient(ellipse at center, #2d1b4e 0%, #0d0518 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.5s ease, visibility 1.5s ease;
+        }
+
+        .opening-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .crown-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .opening-overlay h1 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.2rem;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            letter-spacing: 3px;
+        }
+
+        .opening-overlay p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: #d4af37;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .open-btn {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            padding: 16px 48px;
+            border: 2px solid #ffd700;
+            background: transparent;
+            color: #ffd700;
+            cursor: pointer;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .open-btn:hover {
+            background: #ffd700;
+            color: #1a0a2e;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .open-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .open-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Scroll container */
+        .scroll-wrapper {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 60px 20px;
+            opacity: 0;
+            transition: opacity 2s ease 0.5s;
+        }
+
+        .scroll-wrapper.visible {
+            opacity: 1;
+        }
+
+        .scroll-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            perspective: 1200px;
+        }
+
+        /* Scroll rods */
+        .scroll-rod {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% + 40px);
+            height: 36px;
+            background: linear-gradient(180deg, #8B4513 0%, #A0522D 30%, #CD853F 50%, #A0522D 70%, #8B4513 100%);
+            border-radius: 18px;
+            z-index: 50;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.2);
+        }
+
+        .scroll-rod::before, .scroll-rod::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 24px; height: 44px;
+            background: linear-gradient(180deg, #B8860B 0%, #FFD700 50%, #B8860B 100%);
+            border-radius: 4px;
+            transform: translateY(-50%);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .scroll-rod::before { left: -12px; }
+        .scroll-rod::after { right: -12px; left: auto; }
+
+        .scroll-rod.top { top: -18px; }
+        .scroll-rod.bottom { bottom: -18px; }
+
+        /* Parchment */
+        .parchment {
+            background: 
+                linear-gradient(135deg, #f5e6c8 0%, #e8d5a3 20%, #f5e6c8 50%, #e8d5a3 80%, #f5e6c8 100%),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+            background-blend-mode: multiply;
+            padding: 60px 50px 70px;
+            position: relative;
+            box-shadow: 
+                0 0 0 1px rgba(139, 69, 19, 0.2),
+                0 0 0 4px rgba(139, 69, 19, 0.1),
+                0 0 30px rgba(0,0,0,0.4),
+                inset 0 0 60px rgba(139, 69, 19, 0.05);
+            transform-origin: top center;
+            animation: unrollScroll 2.5s ease-out forwards;
+            animation-play-state: paused;
+            clip-path: inset(0 0 100% 0);
+        }
+
+        .parchment.unrolling {
+            animation-play-state: running;
+        }
+
+        @keyframes unrollScroll {
+            0% { clip-path: inset(0 0 100% 0); }
+            100% { clip-path: inset(0 0 0% 0); }
+        }
+
+        /* Parchment edge effect */
+        .parchment::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, 
+                rgba(139, 69, 19, 0.15) 0%, 
+                transparent 8%, 
+                transparent 92%, 
+                rgba(139, 69, 19, 0.15) 100%);
+            pointer-events: none;
+        }
+
+        /* Decorative corners */
+        .corner {
+            position: absolute;
+            width: 50px; height: 50px;
+            border: 2px solid #B8860B;
+            z-index: 5;
+        }
+        .corner.tl { top: 15px; left: 15px; border-right: none; border-bottom: none; }
+        .corner.tr { top: 15px; right: 15px; border-left: none; border-bottom: none; }
+        .corner.bl { bottom: 15px; left: 15px; border-right: none; border-top: none; }
+        .corner.br { bottom: 15px; right: 15px; border-left: none; border-top: none; }
+
+        /* Content animations */
+        .content-fade {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease forwards;
+            animation-play-state: paused;
+        }
+
+        .content-fade.visible {
+            animation-play-state: running;
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .delay-1 { animation-delay: 2.8s; }
+        .delay-2 { animation-delay: 3.2s; }
+        .delay-3 { animation-delay: 3.6s; }
+        .delay-4 { animation-delay: 4.0s; }
+        .delay-5 { animation-delay: 4.4s; }
+        .delay-6 { animation-delay: 4.8s; }
+        .delay-7 { animation-delay: 5.2s; }
+        .delay-8 { animation-delay: 5.6s; }
+        .delay-9 { animation-delay: 6.0s; }
+        .delay-10 { animation-delay: 6.4s; }
+        .delay-11 { animation-delay: 6.8s; }
+
+        /* Sparkle decorations */
+        .sparkle {
+            display: inline-block;
+            color: #FFD700;
+            font-size: 1.2rem;
+            animation: sparkleAnim 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkleAnim {
+            0%, 100% { opacity: 0.6; transform: scale(0.8) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+        }
+
+        /* Typography - matching the original PDF style */
+        .header-stars {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .header-stars .sparkle {
+            font-size: 1.5rem;
+            margin: 0 3px;
+        }
+
+        .main-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-align: center;
+            color: #8B0000;
+            letter-spacing: 6px;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .sub-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            color: #B8860B;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .story-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #3d1a0a;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .princess-name {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.4rem;
+            color: #C71585;
+            text-align: center;
+            display: block;
+            margin: 8px 0;
+            text-shadow: 0 0 10px rgba(199, 21, 133, 0.2);
+        }
+
+        .age-highlight {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.5rem;
+            color: #FFD700;
+            text-align: center;
+            display: block;
+            margin: 8px 0;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+            letter-spacing: 3px;
+        }
+
+        .section-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+            color: #8B0000;
+            letter-spacing: 4px;
+            margin: 35px 0 20px;
+            position: relative;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '✦';
+            color: #B8860B;
+            margin: 0 12px;
+            font-size: 0.9rem;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #B8860B;
+            font-size: 1.2rem;
+            letter-spacing: 8px;
+        }
+
+        .detail-row {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #3d1a0a;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .detail-label {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            color: #8B0000;
+            font-size: 0.95rem;
+        }
+
+        .decrees-box {
+            border: 2px solid #8B0000;
+            padding: 20px 25px;
+            margin: 20px 0;
+            background: rgba(139, 0, 0, 0.03);
+            position: relative;
+        }
+
+        .decrees-box::before {
+            content: '⚠';
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f5e6c8;
+            padding: 0 10px;
+            font-size: 1.3rem;
+            color: #8B0000;
+        }
+
+        .decrees-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.1rem;
+            color: #8B0000;
+            text-align: center;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+        }
+
+        .decree-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #3d1a0a;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .map-section {
+            margin-top: 25px;
+        }
+
+        .map-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.2rem;
+            color: #8B0000;
+            text-align: center;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .map-intro {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            font-style: italic;
+            text-align: center;
+            color: #3d1a0a;
+            margin-bottom: 15px;
+        }
+
+        .directions-list {
+            list-style: none;
+            padding: 0;
+            counter-reset: direction;
+        }
+
+        .directions-list li {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #3d1a0a;
+            margin-bottom: 10px;
+            padding-left: 35px;
+            position: relative;
+        }
+
+        .directions-list li::before {
+            counter-increment: direction;
+            content: counter(direction) ".";
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            color: #B8860B;
+            font-size: 1.05rem;
+        }
+
+        .closing-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.6rem;
+            color: #C71585;
+            text-align: center;
+            margin: 30px 0 10px;
+        }
+
+        .closing-salute {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.1rem;
+            color: #8B0000;
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.4rem;
+            color: #B8860B;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        /* Floating magical orbs */
+        .magic-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(1px);
+            pointer-events: none;
+            z-index: 5;
+            animation: orbFloat linear infinite;
+        }
+
+        @keyframes orbFloat {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            5% { opacity: 0.8; }
+            95% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .parchment { padding: 45px 25px 55px; }
+            .main-title { font-size: 1.5rem; letter-spacing: 3px; }
+            .princess-name { font-size: 1.8rem; }
+            .sub-title { font-size: 0.8rem; letter-spacing: 2px; }
+            .section-title { font-size: 1.1rem; }
+            .story-text { font-size: 1rem; }
+            .scroll-rod { height: 28px; }
+            .scroll-rod::before, .scroll-rod::after { height: 36px; width: 18px; }
+            .opening-overlay h1 { font-size: 1.5rem; }
+        }
+
+        /* Music control */
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            color: #ffd700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .music-control:hover {
+            background: rgba(255, 215, 0, 0.3);
+            transform: scale(1.1);
+        }
+
+        .music-control.muted {
+            opacity: 0.5;
+        }
+
+        /* Ribbon decoration */
+        .ribbon {
+            position: absolute;
+            top: 30px;
+            right: -5px;
+            width: 100px; height: 100px;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .ribbon span {
+            position: absolute;
+            top: 18px;
+            right: -28px;
+            width: 130px;
+            display: block;
+            background: linear-gradient(90deg, #C71585, #FF69B4);
+            color: #fff;
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-align: center;
+            padding: 5px 0;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Magical Background -->
+    <div class="bg-scene" id="bgScene"></div>
+
+    <!-- Opening Overlay -->
+    <div class="opening-overlay" id="openingOverlay">
+        <div class="crown-icon">👑</div>
+        <h1>A Royal Invitation</h1>
+        <p>You are cordially summoned...</p>
+        <button class="open-btn" id="openBtn" onclick="openInvitation()">Open the Royal Scroll</button>
+    </div>
+
+    <!-- Scroll Invitation -->
+    <div class="scroll-wrapper" id="scrollWrapper">
+        <div class="scroll-container">
+            <div class="scroll-rod top"></div>
+            
+            <div class="parchment" id="parchment">
+                <div class="corner tl"></div>
+                <div class="corner tr"></div>
+                <div class="corner bl"></div>
+                <div class="corner br"></div>
+                
+                <div class="ribbon">
+                    <span>ROYAL</span>
+                </div>
+
+                <!-- Header Stars -->
+                <div class="header-stars content-fade delay-1">
+                    <span class="sparkle">✨</span>
+                    <span class="sparkle" style="animation-delay: 0.3s">✨</span>
+                    <span class="sparkle" style="animation-delay: 0.6s">✨✨</span>
+                    <span class="sparkle" style="animation-delay: 0.9s">✨</span>
+                    <span class="sparkle" style="animation-delay: 1.2s">✨</span>
+                </div>
+
+                <!-- Main Title -->
+                <h1 class="main-title content-fade delay-1">ROYAL INVITATION</h1>
+                <p class="sub-title content-fade delay-2">You are cordially summoned!</p>
+
+                <div class="divider content-fade delay-2">~ ❦ ~</div>
+
+                <!-- Story -->
+                <p class="story-text content-fade delay-3">
+                    Once upon a time, in the kingdom of Gweru…<br>
+                    A royal celebration is being proclaimed for
+                </p>
+
+                <span class="princess-name content-fade delay-4">Princess Zinhle Lusinga</span>
+                <span class="age-highlight content-fade delay-4">✨ Turning 5 ✨</span>
+
+                <p class="story-text content-fade delay-5">
+                    on the 1st of August 2026.<br>
+                    Her Majesty, the King & Queen of the Lusinga household,<br>
+                    request the honour of your presence at the Royal Birthday Ball.
+                </p>
+
+                <div class="divider content-fade delay-5">~ ❦ ~</div>
+
+                <!-- Celebration Details -->
+                <h2 class="section-title content-fade delay-6">Celebration Details</h2>
+
+                <p class="detail-row content-fade delay-6">
+                    <span class="detail-label">Guest of Honour:</span> Princess Zinhle Lusinga (turning 5!)
+                </p>
+                <p class="detail-row content-fade delay-6">
+                    <span class="detail-label">Date:</span> Saturday, 1st August 2026
+                </p>
+                <p class="detail-row content-fade delay-7">
+                    <span class="detail-label">Time:</span> 0900hrs to 1600hrs
+                </p>
+                <p class="detail-row content-fade delay-7">
+                    <span class="detail-label">Venue:</span> The Royal Castle – 552 Hertfordshire Phase 1, Gweru
+                </p>
+                <p class="detail-row content-fade delay-7">
+                    <span class="detail-label">Dress Code:</span> <span style="color: #C71585; font-weight: 600">Pink</span> – Royal guests must dress in pink attire to honour Princess Zinhle
+                </p>
+
+                <!-- Royal Decrees -->
+                <div class="decrees-box content-fade delay-8">
+                    <h3 class="decrees-title">⚠ ROYAL DECREES ⚠</h3>
+                    <p class="decree-text" style="font-size: 0.85rem; font-style: italic; margin-bottom: 15px;">(Please Read!)</p>
+                    <p class="decree-text">
+                        Attendance is strictly by invitation only – this magical scroll is your golden ticket.
+                    </p>
+                    <p class="decree-text">
+                        <span class="detail-label">The Gift Law:</span> Every guest must come bearing a gift for the Princess. If you arrive without a gift, a royal levy of $10 USD shall be paid at the gate.
+                    </p>
+                    <p class="decree-text">
+                        Please <span class="detail-label">RSVP</span> to confirm your carriage (reply) by 25 July 2026.
+                    </p>
+                </div>
+
+                <!-- Royal Map -->
+                <div class="map-section content-fade delay-9">
+                    <h2 class="map-title">🗺 Royal Map</h2>
+                    <p class="map-intro">Directions to the Castle<br>Follow these enchanted directions carefully, brave traveller:</p>
+                    <ol class="directions-list">
+                        <li>Head out of Gweru using the Harare main road.</li>
+                        <li>Pass Regina Mundi High school on your right.</li>
+                        <li>Continue straight past Glow Petroleum – keep going without turning.</li>
+                        <li>Look for a clear sign indicating "Chiwundura – Gokomera" to your left – turn right there onto a dust road.</li>
+                        <li>Go straight. You will pass some shops on your left – just after them, ignore the immediate turn on your right and continue straight onto the narrow tarred strip road.</li>
+                        <li>Pass a grey-blue roofed house on your side. Keep going straight.</li>
+                        <li>Take the next right turn and continue straight.</li>
+                        <li>Curve/turn to the right, then immediately take your first left turn.</li>
+                        <li>After about 500 metres, take your next right turn.</li>
+                        <li>Continue straight until you see the first house on your right – that is 552 Hertfordshire Phase 1. We will be waiting for you there!</li>
+                    </ol>
+                </div>
+
+                <div class="divider content-fade delay-10">✨ ❦ ✨</div>
+
+                <!-- Closing -->
+                <p class="closing-text content-fade delay-10">Dream with your eyes open… and come celebrate!</p>
+                <p class="closing-salute content-fade delay-11">Long live the Princess!</p>
+                <p class="signature content-fade delay-11">— The Lusinga Royal Family</p>
+
+                <div class="header-stars content-fade delay-11">
+                    <span class="sparkle">✨</span>
+                    <span class="sparkle" style="animation-delay: 0.3s">✨</span>
+                    <span class="sparkle" style="animation-delay: 0.6s">✨✨</span>
+                    <span class="sparkle" style="animation-delay: 0.9s">✨</span>
+                    <span class="sparkle" style="animation-delay: 1.2s">✨</span>
+                </div>
+            </div>
+
+            <div class="scroll-rod bottom"></div>
+        </div>
+    </div>
+
+    <!-- Music Toggle -->
+    <button class="music-control" id="musicBtn" onclick="toggleMusic()" title="Toggle Music">♫</button>
+
+    <script>
+        // ============ BACKGROUND MAGIC ============
+        const bgScene = document.getElementById('bgScene');
+        
+        // Create stars
+        for (let i = 0; i < 80; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+            star.style.setProperty('--max-opacity', Math.random() * 0.8 + 0.2);
+            star.style.animationDelay = Math.random() * 5 + 's';
+            bgScene.appendChild(star);
+        }
+
+        // Create floating magic particles
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'magic-particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.setProperty('--drift', (Math.random() * 100 - 50) + 'px');
+            particle.style.animationDuration = (Math.random() * 8 + 6) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particle.style.width = (Math.random() * 4 + 2) + 'px';
+            particle.style.height = particle.style.width;
+            bgScene.appendChild(particle);
+        }
+
+        // Create magic orbs
+        const orbColors = ['#C71585', '#FFD700', '#FF69B4', '#DDA0DD', '#B8860B'];
+        for (let i = 0; i < 8; i++) {
+            const orb = document.createElement('div');
+            orb.className = 'magic-orb';
+            const size = Math.random() * 15 + 8;
+            orb.style.width = size + 'px';
+            orb.style.height = size + 'px';
+            orb.style.left = Math.random() * 100 + '%';
+            orb.style.background = `radial-gradient(circle at 30% 30%, ${orbColors[i % orbColors.length]}, transparent 70%)`;
+            orb.style.opacity = '0.6';
+            orb.style.animationDuration = (Math.random() * 12 + 8) + 's';
+            orb.style.animationDelay = Math.random() * 5 + 's';
+            bgScene.appendChild(orb);
+        }
+
+        // ============ SCROLL OPENING ============
+        function openInvitation() {
+            const overlay = document.getElementById('openingOverlay');
+            const scrollWrapper = document.getElementById('scrollWrapper');
+            const parchment = document.getElementById('parchment');
+            const contentFades = document.querySelectorAll('.content-fade');
+            
+            overlay.classList.add('hidden');
+            scrollWrapper.classList.add('visible');
+            parchment.classList.add('unrolling');
+            
+            // Trigger content fade animations
+            contentFades.forEach(el => {
+                el.classList.add('visible');
+            });
+
+            // Start music
+            startMusic();
+        }
+
+        // ============ PRINCESS AURORA MUSIC (Web Audio API) ============
+        let audioCtx = null;
+        let isPlaying = false;
+        let isMuted = false;
+        let musicInterval = null;
+        let currentNote = 0;
+
+        // Princess Aurora / Sleeping Beauty inspired melody
+        // A gentle, dreamy waltz-like lullaby
+        const melody = [
+            // First phrase - dreamy intro
+            { note: 493.88, dur: 0.6, type: 'sine' },   // B4
+            { note: 523.25, dur: 0.6, type: 'sine' },   // C5
+            { note: 587.33, dur: 0.8, type: 'sine' },   // D5
+            { note: 523.25, dur: 0.4, type: 'sine' },   // C5
+            { note: 493.88, dur: 0.4, type: 'sine' },   // B4
+            { note: 440.00, dur: 0.8, type: 'sine' },   // A4
+            { note: 0, dur: 0.3, type: 'sine' },        // rest
+            // Second phrase
+            { note: 440.00, dur: 0.6, type: 'sine' },   // A4
+            { note: 493.88, dur: 0.6, type: 'sine' },   // B4
+            { note: 523.25, dur: 0.8, type: 'sine' },   // C5
+            { note: 493.88, dur: 0.4, type: 'sine' },   // B4
+            { note: 440.00, dur: 0.4, type: 'sine' },   // A4
+            { note: 392.00, dur: 0.8, type: 'sine' },   // G4
+            { note: 0, dur: 0.3, type: 'sine' },        // rest
+            // Magical bridge
+            { note: 587.33, dur: 0.5, type: 'triangle' }, // D5
+            { note: 659.25, dur: 0.5, type: 'triangle' }, // E5
+            { note: 698.46, dur: 0.6, type: 'triangle' }, // F5
+            { note: 659.25, dur: 0.4, type: 'triangle' }, // E5
+            { note: 587.33, dur: 0.4, type: 'triangle' }, // D5
+            { note: 523.25, dur: 0.6, type: 'triangle' }, // C5
+            { note: 0, dur: 0.2, type: 'sine' },
+            // Resolution
+            { note: 523.25, dur: 0.5, type: 'sine' },   // C5
+            { note: 587.33, dur: 0.5, type: 'sine' },   // D5
+            { note: 523.25, dur: 0.5, type: 'sine' },   // C5
+            { note: 493.88, dur: 0.5, type: 'sine' },   // B4
+            { note: 440.00, dur: 0.8, type: 'sine' },   // A4
+            { note: 0, dur: 0.4, type: 'sine' },
+            { note: 392.00, dur: 0.6, type: 'sine' },   // G4
+            { note: 440.00, dur: 0.6, type: 'sine' },   // A4
+            { note: 493.88, dur: 1.0, type: 'sine' },   // B4
+            { note: 0, dur: 0.5, type: 'sine' },
+            // Repeat variation - higher octave feel
+            { note: 659.25, dur: 0.5, type: 'sine' },   // E5
+            { note: 698.46, dur: 0.5, type: 'sine' },   // F5
+            { note: 783.99, dur: 0.6, type: 'sine' },   // G5
+            { note: 698.46, dur: 0.4, type: 'sine' },   // F5
+            { note: 659.25, dur: 0.4, type: 'sine' },   // E5
+            { note: 587.33, dur: 0.8, type: 'sine' },   // D5
+            { note: 0, dur: 0.3, type: 'sine' },
+            { note: 587.33, dur: 0.5, type: 'triangle' }, // D5
+            { note: 659.25, dur: 0.5, type: 'triangle' }, // E5
+            { note: 587.33, dur: 0.5, type: 'triangle' }, // D5
+            { note: 523.25, dur: 0.5, type: 'triangle' }, // C5
+            { note: 493.88, dur: 0.8, type: 'sine' },   // B4
+            { note: 0, dur: 0.3, type: 'sine' },
+            { note: 523.25, dur: 0.6, type: 'sine' },   // C5
+            { note: 493.88, dur: 0.6, type: 'sine' },   // B4
+            { note: 440.00, dur: 1.2, type: 'sine' },   // A4
+            { note: 0, dur: 0.6, type: 'sine' },
+        ];
+
+        function playNote(frequency, duration, type) {
+            if (!audioCtx || frequency === 0 || isMuted) return;
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = type || 'sine';
+            osc.frequency.value = frequency;
+            
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime + 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + duration + 0.1);
+        }
+
+        function playMelodyStep() {
+            if (!isPlaying || isMuted) return;
+            const note = melody[currentNote % melody.length];
+            playNote(note.note, note.dur, note.type);
+            currentNote++;
+            
+            // Schedule next note
+            const nextDelay = note.dur * 1000;
+            musicInterval = setTimeout(playMelodyStep, nextDelay);
+        }
+
+        function startMusic() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            isPlaying = true;
+            isMuted = false;
+            currentNote = 0;
+            document.getElementById('musicBtn').classList.remove('muted');
+            playMelodyStep();
+        }
+
+        function stopMusic() {
+            isPlaying = false;
+            if (musicInterval) {
+                clearTimeout(musicInterval);
+                musicInterval = null;
+            }
+        }
+
+        function toggleMusic() {
+            const btn = document.getElementById('musicBtn');
+            if (!audioCtx) {
+                startMusic();
+                return;
+            }
+            if (isMuted) {
+                isMuted = false;
+                btn.classList.remove('muted');
+                btn.innerHTML = '♫';
+                if (!musicInterval) playMelodyStep();
+            } else {
+                isMuted = true;
+                btn.classList.add('muted');
+                btn.innerHTML = '✕';
+            }
+        }
+
+        // ============ SCROLL SPARKLE EFFECT ON PARCHMENT ============
+        const parchment = document.getElementById('parchment');
+        parchment.addEventListener('mousemove', (e) => {
+            const rect = parchment.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const sparkle = document.createElement('span');
+            sparkle.innerHTML = '✨';
+            sparkle.style.position = 'absolute';
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            sparkle.style.fontSize = '12px';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.color = '#FFD700';
+            sparkle.style.opacity = '1';
+            sparkle.style.transition = 'all 0.8s ease';
+            sparkle.style.zIndex = '100';
+            parchment.appendChild(sparkle);
+            
+            requestAnimationFrame(() => {
+                sparkle.style.transform = `translate(${Math.random() * 20 - 10}px, -30px) scale(0)`;
+                sparkle.style.opacity = '0';
+            });
+            
+            setTimeout(() => sparkle.remove(), 800);
+        });
+
+        // ============ ENTRANCE ANIMATION FOR OVERLAY TEXT ============
+        document.querySelector('.opening-overlay h1').style.opacity = '0';
+        document.querySelector('.opening-overlay h1').style.transform = 'translateY(20px)';
+        document.querySelector('.opening-overlay h1').style.transition = 'all 1s ease';
+        
+        document.querySelector('.opening-overlay p').style.opacity = '0';
+        document.querySelector('.opening-overlay p').style.transition = 'opacity 1s ease 0.3s';
+        
+        document.getElementById('openBtn').style.opacity = '0';
+        document.getElementById('openBtn').style.transform = 'translateY(20px)';
+        document.getElementById('openBtn').style.transition = 'all 0.8s ease 0.6s';
+        
+        setTimeout(() => {
+            document.querySelector('.opening-overlay h1').style.opacity = '1';
+            document.querySelector('.opening-overlay h1').style.transform = 'translateY(0)';
+        }, 100);
+        setTimeout(() => {
+            document.querySelector('.opening-overlay p').style.opacity = '1';
+        }, 400);
+        setTimeout(() => {
+            document.getElementById('openBtn').style.opacity = '1';
+            document.getElementById('openBtn').style.transform = 'translateY(0)';
+        }, 700);
+    </script>
+</body>
+</html>
